@@ -1,37 +1,48 @@
-import random, pygame, sys
+import pygame
+import sys
+import random
 
+# Initialize Pygame
 pygame.init()
 
-WIDTH = 1280
-HEIGHT = 720
-CARD_WiDTH = 100
-CARD_HEIGHT = 150
+# Constants
+WIDTH, HEIGHT = 800, 600
+CARD_WIDTH, CARD_HEIGHT = 100, 150
+FPS = 60
 WHITE = (255, 255, 255)
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-pygame.display.set_caption("Card Game")
-
-running = True
-
-while running:
-for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-
+# Load card images
 card_images = []
 for i in range(1, 9):
-    image = pygame.image.load("card.png")
-    image = pygame.transform.scale(image, (CARD_WiDTH, CARD_HEIGHT))
+    image = pygame.image.load("card.png")  # Replace with your image file names
+    image = pygame.transform.scale(image, (CARD_WIDTH, CARD_HEIGHT))
     card_images.extend([image, image.copy()])
 
-
+# Game variables
 cards = [i for i in range(16)]
 random.shuffle(cards)
 flipped_cards = []
 selected_card = None
 game_over = False
+
+# Pygame setup
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Matching Card Game")
+clock = pygame.time.Clock()
+
+def draw_card(x, y, index, flipped):
+    if flipped:
+        screen.blit(card_images[index], (x, y))
+    else:
+        pygame.draw.rect(screen, WHITE, (x, y, CARD_WIDTH, CARD_HEIGHT))
+
+def draw_board():
+    for i in range(4):
+        for j in range(4):
+            index = i * 4 + j
+            x = j * (CARD_WIDTH + 10)
+            y = i * (CARD_HEIGHT + 10)
+            draw_card(x, y, cards[index], index in flipped_cards)
 
 def check_match():
     if len(flipped_cards) == 2:
@@ -45,7 +56,7 @@ def check_match():
             flipped_cards.pop()
             flipped_cards.pop()
 
-def play_game():
+def main():
     global selected_card
     global game_over
 
@@ -71,6 +82,5 @@ def play_game():
         pygame.display.flip()
         clock.tick(FPS)
 
-play_game()
-
-pygame.quit()
+if __name__ == "__main__":
+    main()
