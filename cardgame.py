@@ -63,17 +63,15 @@ def check_match():
   if len(flipped_cards) == 2:
       if cards[flipped_cards[0]] == cards[flipped_cards[1]]:
           matched_indices = list(set(flipped_cards))
-          print("Matched Indices:", matched_indices)
           for index in matched_indices:
               cards[index] = -1
 
           if all(card == -1 for card in cards):
               global game_over
               game_over = True
-              print("Game Over!")
+              flipped_cards.clear()
       else:
-          print("Cards do not match")
-          pygame.time.set_timer(pygame.USEREVENT, 500)
+        pygame.time.set_timer(pygame.USEREVENT, 1000)
 
 
 
