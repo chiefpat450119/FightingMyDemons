@@ -3,6 +3,7 @@ from button import Button
 import datetime
 
 # Initialize pygame
+pygame.mixer.init()
 pygame.init()
 
 screen = pygame.display.set_mode((1280, 700))
@@ -16,6 +17,7 @@ BG = pygame.transform.scale(BG, (1280, 700))
 icon = pygame.image.load("assets/App Icon.png")
 pygame.display.set_icon(icon)
 
+
 # Get Font
 def get_font(size):
 	return pygame.font.Font("assets/8bit.ttf", size)
@@ -24,10 +26,37 @@ def get_font(size):
 # Game Variables
 current_time = datetime.datetime.now()
 current_time = current_time.strftime("%H:%M")
-# Set alarm time to tomorrow
-alarm_time = datetime.datetime.now() + datetime.timedelta(days=1)
+# Set alarm time to today's date and current time
+alarm_time = datetime.datetime.now()
 volume = 0.5
 music = True
+
+
+def card_game():
+	pygame.display.set_caption("Card Game")
+
+	# Start playing alarm
+	pygame.mixer.music.load("assets/sounds/default alarm.wav")
+	pygame.mixer.music.play(-1)
+
+	while True:
+		screen.fill("#dbd6d4")
+
+		# Render Boss
+		boss = pygame.image.load("assets/demon no background.png")
+		boss = pygame.transform.scale(boss, (500, 500))
+		boss_rect = boss.get_rect(center=(340, 350))
+		screen.blit(boss, boss_rect)
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				# stop music
+				pygame.mixer.music.stop()
+
+				pygame.quit()
+				sys.exit()
+
+		pygame.display.update()
 
 
 # Countdown Loop
@@ -67,6 +96,13 @@ def countdown():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
+
+		"""# Go to the cardgame screen when time is up
+		if time_until_alarm <= datetime.timedelta(seconds=0):
+			card_game()"""
+
+		# !!! TESTING !!!
+		card_game()
 
 		pygame.display.update()
 
@@ -274,4 +310,5 @@ def main_menu():
 
 		pygame.display.update()
 
-main_menu()
+if __name__ == "__main__":
+	main_menu()
