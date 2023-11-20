@@ -46,7 +46,7 @@ def victory():
 	pygame.mixer.music.play(1)
 
 	while True:
-		screen.fill("Black")
+		screen.fill("#999797")
 
 		victory_mouse_pos = pygame.mouse.get_pos()
 
@@ -85,8 +85,8 @@ def card_game():
 
 	pygame.mixer.music.set_volume(volume)
 	pygame.mixer.music.play(-1)
+	time.sleep(5)
 	if music:
-		time.sleep(5)
 		pygame.mixer.music.load("assets/sounds/Boss fight music.mp3")
 		pygame.mixer.music.set_volume(volume)
 		pygame.mixer.music.play(-1)
@@ -445,17 +445,10 @@ def play():
 						music_button_colour = "White"
 						music_button_text = "On"
 						toggle_music.update(screen)
-						print(music)
 					else:
 						music_button_colour = "Red"
 						music_button_text = "Off"
 						toggle_music.update(screen)
-						print(music)
-
-
-
-
-
 
 		pygame.display.update()
 
