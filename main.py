@@ -1,17 +1,18 @@
 import pygame, sys
 from button import Button
 import datetime
+import time
 
 # Initialize pygame
 pygame.mixer.init()
 pygame.init()
 
-screen = pygame.display.set_mode((1280, 700))
+screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Main Menu")
 
 # Double the size of the background image
 BG = pygame.image.load("assets/background.jpg")
-BG = pygame.transform.scale(BG, (1280, 700))
+BG = pygame.transform.scale(BG, (1280, 720))
 
 # Set icon
 icon = pygame.image.load("assets/App Icon.png")
@@ -32,20 +33,76 @@ volume = 0.5
 music = True
 
 
+# Victory Loop
+def victory():
+	pygame.display.set_caption("Victory")
+
+	# Stop playing alarm
+	pygame.mixer.music.stop()
+	# Start playing victory music
+	pygame.mixer.music.load("assets/sounds/Victory Trumpets.mp3")
+	pygame.mixer.music.set_volume(volume)
+	pygame.mixer.music.play(1)
+
+	while True:
+		screen.fill("Black")
+
+		victory_mouse_pos = pygame.mouse.get_pos()
+
+		# Render victory banner
+		victory_banner = pygame.image.load("assets/Victory Banner.png")
+		victory_banner_rect = victory_banner.get_rect(center=(640, 200))
+		screen.blit(victory_banner, victory_banner_rect)
+
+
+		# Quit button
+		quit_button = Button(image=None, pos=(640, 660), text_input="Quit", font=get_font(75), base_color="White",
+		                     hovering_color="Green")
+
+		quit_button.changeColor(victory_mouse_pos)
+		quit_button.update(screen)
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				# stop music
+				pygame.mixer.music.stop()
+				pygame.quit()
+				sys.exit()
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+				if quit_button.checkForInput(victory_mouse_pos):
+					pygame.quit()
+					sys.exit()
+
+		pygame.display.update()
+
+
 def card_game():
 	pygame.display.set_caption("Card Game")
 
 	# Start playing alarm
 	pygame.mixer.music.load("assets/sounds/default alarm.wav")
+
+	pygame.mixer.music.set_volume(volume)
 	pygame.mixer.music.play(-1)
+	if music:
+		time.sleep(5)
+		pygame.mixer.music.load("assets/sounds/Boss fight music.mp3")
+		pygame.mixer.music.set_volume(volume)
+		pygame.mixer.music.play(-1)
+
+	# Variables
+	health = 6  # Start with full health
+
 
 	while True:
 		screen.fill("#dbd6d4")
 
+		card_game_mouse_pos = pygame.mouse.get_pos()
+
 		# Render Boss
 		boss = pygame.image.load("assets/demon no background.png")
 		boss = pygame.transform.scale(boss, (500, 500))
-		boss_rect = boss.get_rect(center=(340, 350))
+		boss_rect = boss.get_rect(center=(300, 310))
 		screen.blit(boss, boss_rect)
 
 		for event in pygame.event.get():
@@ -56,7 +113,37 @@ def card_game():
 				pygame.quit()
 				sys.exit()
 
+			# Decrease health when mouse is clicked
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+				health -= 1
+				# Play damage sound effect
+				damage_sound = pygame.mixer.Sound("assets/sounds/damagesfx.mp3")
+				damage_sound.set_volume(volume)
+				damage_sound.play()
+
+				# Play damage animation
+				boss = pygame.image.load("assets/Demon taking damage.png")
+				boss = pygame.transform.scale(boss, (500, 500))
+				boss_rect = boss.get_rect(center=(300, 310))
+				screen.blit(boss, boss_rect)
+				# Render health bar above boss
+				health_bar = pygame.image.load(f"assets/health bar/{health}_6 health bar.png")
+				health_bar_rect = health_bar.get_rect(center=(300, 590))
+				screen.blit(health_bar, health_bar_rect)
+				pygame.display.update()
+				time.sleep(0.5)
+
+		# Render health bar above boss
+		health_bar = pygame.image.load(f"assets/health bar/{health}_6 health bar.png")
+		health_bar_rect = health_bar.get_rect(center=(300, 590))
+		screen.blit(health_bar, health_bar_rect)
+
 		pygame.display.update()
+
+		# If health is 0, go to the victory screen
+		if health == 0:
+			time.sleep(1)
+			victory()
 
 
 # Countdown Loop
@@ -101,7 +188,15 @@ def countdown():
 		if time_until_alarm <= datetime.timedelta(seconds=0):
 			card_game()"""
 
-		# !!! TESTING !!!
+		# !!! TESTING !!! TODO: Wrap it in an if statement as above
+		# Render flames and play flame whoosh
+		flames = pygame.image.load("assets/Flames.png")
+		flames_rect = flames.get_rect(center=(640, 350))
+		screen.blit(flames, flames_rect)
+		flame_whoosh = pygame.mixer.Sound("assets/sounds/flame whoosh.mp3")
+		flame_whoosh.set_volume(volume)
+		flame_whoosh.play()
+		pygame.display.update()
 		card_game()
 
 		pygame.display.update()
