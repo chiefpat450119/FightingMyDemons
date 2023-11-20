@@ -2,6 +2,7 @@ import pygame, sys
 from button import Button
 import datetime
 import time
+import random
 
 # Initialize pygame
 pygame.mixer.init()
@@ -93,6 +94,72 @@ def card_game():
 	# Variables
 	health = 6  # Start with full health
 
+	# Constants
+	CARD_WIDTH, CARD_HEIGHT = 100, 150
+	FPS = 60
+
+
+	# Load face-down images
+	card_images_face_down = [pygame.image.load("assets/CardBackside.png") for i in range(12)]
+
+	# Game variables
+	cards = [i // 2 for i in range(12)]
+	random.shuffle(cards)
+	flipped_cards = []
+	completed_cards = []
+
+	# Load a single set of face-up images for all cards
+	card_images_face_up = [pygame.image.load(f"assets/{name}") for name in
+	                       ["ArrowClusterCard.png", "AxeCard.png", "IceShrinkCard.png", "SpearCard.png",
+	                        "SwordCard.png", "SwordClusterCard.png"]]
+
+	# Pygame setup
+	clock = pygame.time.Clock()
+
+	def calculate_board_position():
+		return 700, 75
+
+	def draw_card(x, y, index, flipped, completed):
+		if flipped:
+			if 0 <= cards[index] < len(card_images_face_up):
+				screen.blit(card_images_face_up[cards[index]], (x, y))
+		elif completed:
+			pass
+		else:
+			if 0 <= index < len(card_images_face_down):
+				screen.blit(card_images_face_down[index], (x, y))
+
+	def draw_board():
+		board_x, board_y = calculate_board_position()
+
+		for i in range(4):
+			for j in range(4):
+				index = i * 4 + j
+				x = board_x + j * (CARD_WIDTH + 10)
+				y = board_y + i * (CARD_HEIGHT + 10)
+				draw_card(x, y, index, index in flipped_cards, index in completed_cards)
+
+	match_event = pygame.USEREVENT + 1
+	match_fail_event = pygame.USEREVENT + 2
+	def check_match():
+		if len(flipped_cards) == 2:
+			if cards[flipped_cards[0]] == cards[flipped_cards[1]]:
+				matched_indices = list(set(flipped_cards))
+				for index in matched_indices:
+					cards[index] = -1
+					completed_cards.append(index)
+
+				# Trigger match event
+				pygame.event.post(pygame.event.Event(match_event))
+
+				if all(card == -1 for card in cards):
+					flipped_cards.clear()
+					completed_cards.clear()
+
+			else:
+				pygame.time.set_timer(match_fail_event, 2000)
+
+	board_x, board_y = calculate_board_position()
 
 	while True:
 		screen.fill("#dbd6d4")
@@ -113,8 +180,29 @@ def card_game():
 				pygame.quit()
 				sys.exit()
 
+			elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+				x, y = event.pos
+				# check if the click is within the board
+				if board_x <= x <= board_x + 4 * (CARD_WIDTH + 10) and board_y <= y <= board_y + 4 * (
+					CARD_HEIGHT + 10):
+					row = (y - board_y) // (CARD_HEIGHT + 10)
+					col = (x - board_x) // (CARD_WIDTH + 10)
+					index = row * 4 + col
+
+					if index not in flipped_cards and len(flipped_cards) < 2:
+						# Play card flip sound effect
+						card_flip_sound = pygame.mixer.Sound("assets/sounds/Flip card.mp3")
+						card_flip_sound.set_volume(volume)
+						card_flip_sound.play()
+						flipped_cards.append(index)
+						if len(flipped_cards) == 2:
+							check_match()
+
+			elif event.type == match_fail_event:
+				flipped_cards.clear()
+
 			# Decrease health when mouse is clicked
-			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+			elif event.type == match_event:
 				health -= 1
 				# Play damage sound effect
 				damage_sound = pygame.mixer.Sound("assets/sounds/damagesfx.mp3")
@@ -138,7 +226,10 @@ def card_game():
 		health_bar_rect = health_bar.get_rect(center=(300, 590))
 		screen.blit(health_bar, health_bar_rect)
 
-		pygame.display.update()
+		draw_board()
+
+		pygame.display.flip()
+		clock.tick(FPS)
 
 		# If health is 0, go to the victory screen
 		if health == 0:
