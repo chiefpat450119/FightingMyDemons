@@ -3,6 +3,7 @@ from button import Button
 import datetime
 import time
 import random
+from taunts import taunts_list
 
 # Initialize pygame
 pygame.mixer.init()
@@ -32,6 +33,7 @@ current_time = current_time.strftime("%H:%M")
 alarm_time = datetime.datetime.now()
 volume = 0.5
 music = True
+taunt = random.choice(taunts_list)
 
 
 # Victory Loop
@@ -163,7 +165,6 @@ def card_game():
 				pygame.time.set_timer(match_fail_event, 2000)
 
 	board_x, board_y = calculate_board_position()
-
 	while True:
 		screen.fill("#dbd6d4")
 
@@ -174,6 +175,12 @@ def card_game():
 		boss = pygame.transform.scale(boss, (500, 500))
 		boss_rect = boss.get_rect(center=(300, 310))
 		screen.blit(boss, boss_rect)
+
+		# Display taunt
+		global taunt
+		taunt_text = get_font(30).render(taunt, True, "#b68f40")
+		taunt_rect = taunt_text.get_rect(center=(300, 70))
+		screen.blit(taunt_text, taunt_rect)
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -203,6 +210,12 @@ def card_game():
 
 			elif event.type == match_fail_event:
 				flipped_cards.clear()
+				# Change taunt
+				taunt = random.choice(taunts_list)
+
+
+
+
 
 			# Decrease health when mouse is clicked
 			elif event.type == match_event:
@@ -389,7 +402,6 @@ def play():
 		for button in buttons:
 			button.changeColor(play_mouse_pos)
 			button.update(screen)
-
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
