@@ -12,7 +12,7 @@ screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Main Menu")
 
 # Double the size of the background image
-BG = pygame.image.load("assets/background.jpg")
+BG = pygame.image.load("assets/Title screen background.png")
 BG = pygame.transform.scale(BG, (1280, 720))
 
 # Set icon
@@ -48,11 +48,14 @@ def victory():
 	while True:
 		screen.fill("#999797")
 
+		# Set background image
+		screen.blit(BG, (0, 0))
+
 		victory_mouse_pos = pygame.mouse.get_pos()
 
 		# Render victory banner
-		victory_banner = pygame.image.load("assets/Victory Banner.png")
-		victory_banner_rect = victory_banner.get_rect(center=(640, 200))
+		victory_banner = pygame.image.load("assets/victory Banner 2.png")
+		victory_banner_rect = victory_banner.get_rect(center=(640, 325))
 		screen.blit(victory_banner, victory_banner_rect)
 
 
@@ -275,20 +278,17 @@ def countdown():
 				pygame.quit()
 				sys.exit()
 
-		"""# Go to the cardgame screen when time is up
+		# Go to the cardgame screen when time is up
 		if time_until_alarm <= datetime.timedelta(seconds=0):
-			card_game()"""
-
-		# !!! TESTING !!! TODO: Wrap it in an if statement as above
-		# Render flames and play flame whoosh
-		flames = pygame.image.load("assets/Flames.png")
-		flames_rect = flames.get_rect(center=(640, 350))
-		screen.blit(flames, flames_rect)
-		flame_whoosh = pygame.mixer.Sound("assets/sounds/flame whoosh.mp3")
-		flame_whoosh.set_volume(volume)
-		flame_whoosh.play()
-		pygame.display.update()
-		card_game()
+			# Render flames and play flame whoosh
+			flames = pygame.image.load("assets/Flames.png")
+			flames_rect = flames.get_rect(center=(640, 350))
+			screen.blit(flames, flames_rect)
+			flame_whoosh = pygame.mixer.Sound("assets/sounds/flame whoosh.mp3")
+			flame_whoosh.set_volume(volume)
+			flame_whoosh.play()
+			pygame.display.update()
+			card_game()
 
 		pygame.display.update()
 
@@ -462,15 +462,15 @@ def main_menu():
 
 		menu_mouse_pos = pygame.mouse.get_pos()
 
-		menu_text = get_font(120).render("Fighting My Demons", True, "#b68f40")
-		menu_rect = menu_text.get_rect(center=(640, 100))
+		menu_title = pygame.image.load("assets/title text.png")
+		menu_rect = menu_title.get_rect(center=(640, 300))
 
-		play_button = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(640, 325),
-							text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-		quit_button = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(640, 475),
-		                     text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+		play_button = Button(image=pygame.image.load("assets/set alarm button _UPDATED_.png"), pos=(640, 480),
+							text_input="", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+		quit_button = Button(image=pygame.image.load("assets/quit button.png"), pos=(640, 595),
+		                     text_input="", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
-		screen.blit(menu_text, menu_rect)
+		screen.blit(menu_title, menu_rect)
 
 		for button in [play_button, quit_button]:
 			button.changeColor(menu_mouse_pos)
