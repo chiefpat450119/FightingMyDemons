@@ -60,12 +60,11 @@ def victory():
 		victory_banner_rect = victory_banner.get_rect(center=(640, 325))
 		screen.blit(victory_banner, victory_banner_rect)
 
-
 		# Quit button
 		quit_button = Button(image=None, pos=(640, 660), text_input="Quit", font=get_font(75), base_color="White",
 		                     hovering_color="Green")
 
-		quit_button.changeColor(victory_mouse_pos)
+		quit_button.change_color(victory_mouse_pos)
 		quit_button.update(screen)
 
 		for event in pygame.event.get():
@@ -75,7 +74,7 @@ def victory():
 				pygame.quit()
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-				if quit_button.checkForInput(victory_mouse_pos):
+				if quit_button.check_for_input(victory_mouse_pos):
 					pygame.quit()
 					sys.exit()
 
@@ -102,7 +101,6 @@ def card_game():
 	# Constants
 	CARD_WIDTH, CARD_HEIGHT = 100, 150
 	FPS = 60
-
 
 	# Load face-down images
 	card_images_face_down = [pygame.image.load("assets/CardBackside.png") for i in range(12)]
@@ -146,6 +144,7 @@ def card_game():
 
 	match_event = pygame.USEREVENT + 1
 	match_fail_event = pygame.USEREVENT + 2
+
 	def check_match():
 		if len(flipped_cards) == 2:
 			if cards[flipped_cards[0]] == cards[flipped_cards[1]]:
@@ -259,8 +258,6 @@ def countdown():
 
 	while True:
 
-		countdown_mouse_pos = pygame.mouse.get_pos()
-
 		screen.fill("#dbd6d4")
 
 		# Alarm Title
@@ -284,7 +281,6 @@ def countdown():
 		boss = pygame.transform.scale(boss, (500, 500))
 		boss_rect = boss.get_rect(center=(340, 350))
 		screen.blit(boss, boss_rect)
-
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -336,7 +332,7 @@ def play():
 		volume_rect = volume_text.get_rect(center=(640, 400))
 		screen.blit(volume_text, volume_rect)
 		global volume
-		volume_input_text = get_font(45).render(str(round(volume*100)), True, "#b68f40")
+		volume_input_text = get_font(45).render(str(round(volume * 100)), True, "#b68f40")
 		volume_input_text_rect = volume_input_text.get_rect(center=(640, 470))
 		screen.blit(volume_input_text, volume_input_text_rect)
 
@@ -350,12 +346,14 @@ def play():
 		# Button classes to change alarm time
 		class UpArrow(Button):
 			def __init__(self, pos):
-				super().__init__(image=up_arrow, pos=pos, text_input="", font=pygame.font.SysFont("Arial", 20), base_color="White",
+				super().__init__(image=up_arrow, pos=pos, text_input="", font=pygame.font.SysFont("Arial", 20),
+				                 base_color="White",
 				                 hovering_color="Green")
 
 		class DownArrow(Button):
 			def __init__(self, pos):
-				super().__init__(image=down_arrow, pos=pos, text_input="", font=pygame.font.SysFont("Arial", 20), base_color="White",
+				super().__init__(image=down_arrow, pos=pos, text_input="", font=pygame.font.SysFont("Arial", 20),
+				                 base_color="White",
 				                 hovering_color="Green")
 
 		# Back button
@@ -375,12 +373,11 @@ def play():
 		plus_ten_hours = UpArrow(pos=(display_pos[0] - 35, display_pos[1] - 25))
 		minus_ten_hours = DownArrow(pos=(display_pos[0] - 35, display_pos[1] + 25))
 
-		plus_volume = UpArrow(pos=(640, 470-25))
-		minus_volume = DownArrow(pos=(640, 470+25))
+		plus_volume = UpArrow(pos=(640, 470 - 25))
+		minus_volume = DownArrow(pos=(640, 470 + 25))
 
 		toggle_music = Button(image=None, pos=(640, 550), text_input=f"Music: {music_button_text}",
 		                      font=get_font(75), base_color=music_button_colour, hovering_color="Green")
-
 
 		buttons = [plus_one_min,
 		           minus_one_min,
@@ -400,7 +397,7 @@ def play():
 
 		# Update buttons
 		for button in buttons:
-			button.changeColor(play_mouse_pos)
+			button.change_color(play_mouse_pos)
 			button.update(screen)
 
 		for event in pygame.event.get():
@@ -408,49 +405,49 @@ def play():
 				pygame.quit()
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-				if play_back.checkForInput(play_mouse_pos):
+				if play_back.check_for_input(play_mouse_pos):
 					main_menu()
-				if confirm_alarm.checkForInput(play_mouse_pos):
+				if confirm_alarm.check_for_input(play_mouse_pos):
 					countdown()
 
 				# Change alarm time
-				if plus_one_min.checkForInput(play_mouse_pos):
+				if plus_one_min.check_for_input(play_mouse_pos):
 					# Add 1 minute to alarm time
 					alarm_time = alarm_time + datetime.timedelta(minutes=1)
-				if minus_one_min.checkForInput(play_mouse_pos):
+				if minus_one_min.check_for_input(play_mouse_pos):
 					# Subtract 1 minute from alarm time
 					alarm_time = alarm_time - datetime.timedelta(minutes=1)
-				if plus_ten_min.checkForInput(play_mouse_pos):
+				if plus_ten_min.check_for_input(play_mouse_pos):
 					# Add 10 minutes to alarm time
 					alarm_time = alarm_time + datetime.timedelta(minutes=10)
-				if minus_ten_min.checkForInput(play_mouse_pos):
+				if minus_ten_min.check_for_input(play_mouse_pos):
 					# Subtract 10 minutes from alarm time
 					alarm_time = alarm_time - datetime.timedelta(minutes=10)
-				if plus_one_hour.checkForInput(play_mouse_pos):
+				if plus_one_hour.check_for_input(play_mouse_pos):
 					# Add 1 hour to alarm time
 					alarm_time = alarm_time + datetime.timedelta(hours=1)
-				if minus_one_hour.checkForInput(play_mouse_pos):
+				if minus_one_hour.check_for_input(play_mouse_pos):
 					# Subtract 1 hour from alarm time
 					alarm_time = alarm_time - datetime.timedelta(hours=1)
-				if plus_ten_hours.checkForInput(play_mouse_pos):
+				if plus_ten_hours.check_for_input(play_mouse_pos):
 					# Add 10 hours to alarm time
 					alarm_time = alarm_time + datetime.timedelta(hours=10)
-				if minus_ten_hours.checkForInput(play_mouse_pos):
+				if minus_ten_hours.check_for_input(play_mouse_pos):
 					# Subtract 10 hours from alarm time
 					alarm_time = alarm_time - datetime.timedelta(hours=10)
 
 				# Change volume
-				if plus_volume.checkForInput(play_mouse_pos):
+				if plus_volume.check_for_input(play_mouse_pos):
 					# Add 0.1 to volume
 					if volume <= 0.9:
 						volume += 0.1
-				if minus_volume.checkForInput(play_mouse_pos):
+				if minus_volume.check_for_input(play_mouse_pos):
 					# Subtract 0.1 from volume
 					if volume >= 0.1:
 						volume -= 0.1
 
 				# Toggle music
-				if toggle_music.checkForInput(play_mouse_pos):
+				if toggle_music.check_for_input(play_mouse_pos):
 					global music
 					music = not music
 					if music:
@@ -478,14 +475,14 @@ def main_menu():
 		menu_rect = menu_title.get_rect(center=(640, 300))
 
 		play_button = Button(image=pygame.image.load("assets/set alarm button _UPDATED_.png"), pos=(640, 480),
-							text_input="", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
+		                     text_input="", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 		quit_button = Button(image=pygame.image.load("assets/quit button.png"), pos=(640, 595),
 		                     text_input="", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
 		screen.blit(menu_title, menu_rect)
 
 		for button in [play_button, quit_button]:
-			button.changeColor(menu_mouse_pos)
+			button.change_color(menu_mouse_pos)
 			button.update(screen)
 
 		for event in pygame.event.get():
@@ -493,13 +490,14 @@ def main_menu():
 				pygame.quit()
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-				if play_button.checkForInput(menu_mouse_pos):
+				if play_button.check_for_input(menu_mouse_pos):
 					play()
-				elif quit_button.checkForInput(menu_mouse_pos):
+				elif quit_button.check_for_input(menu_mouse_pos):
 					pygame.quit()
 					sys.exit()
 
 		pygame.display.update()
+
 
 if __name__ == "__main__":
 	main_menu()
