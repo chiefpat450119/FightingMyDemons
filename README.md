@@ -37,4 +37,4 @@ Built using Python and Pygame, with assets and artwork designed in Figma.
 
 In the future, we intend to port the game into a mobile app and add more gamemodes, music, animations, and accessibility
 options.
-Create a Docker container for the game to run in any environment.
+Export to WebGL or WebAssembly to publish online.
