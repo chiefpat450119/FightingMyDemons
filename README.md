@@ -34,7 +34,6 @@ Built using Python and Pygame, with assets and artwork designed in Figma.
 - Set an alarm and enjoy!
 
 ### What's Next?
-
-In the future, we intend to port the game into a mobile app and add more gamemodes, music, animations, and accessibility
+- Port the game into a mobile app and add more gamemodes, music, animations, and accessibility
 options.
-Export to WebGL or WebAssembly to publish online.
+- Export to WebGL or WebAssembly to publish online.
